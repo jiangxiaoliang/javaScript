@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #layout {
+            width: 500px;
+            height: 500px;
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <div id="layout"></div>
+</body>
+<script>
+    // function throttle(func, wait = 500) {
+    //     var _this = this
+    //     var previous = 0
+    //     return function(...args) {
+    //         var now = +new Date()
+    //         if (now - previous > wait) {
+    //             func.call(_this, ...args)
+    //             previous = now
+    //         }
+    //     }
+    // }
+
+    /**
+     * 最终版：支持取消节流
+     * 另外通过传入第三个参数，options.leading 来表示是否可以立即执行一次，
+     *  opitons.trailing 表示结束调用的时候是否还要执行一次，默认都是 true。
+     *  注意设置的时候不能同时将 leading 或 trailing 设置为 false 
+    */
+    function throttle(func, wait, options) {
+        var timeout, context, args, result;
+        var previous = 0;
+        if (!options) options = {};
+
+        var later = function() {
+            previous = options.leading === false ? 0 : new Date().getTime();
+            timeout = null;
+            func.apply(context, args);
+            if (!timeout) context = args = null;
+        };
+
+        var throttled = function() {
+            var now = new Date().getTime();
+            if (!previous && options.leading === false) previous = now;
+            var remaining = wait - (now - previous);
+            context = this;
+            args = arguments;
+            if (remaining <= 0 || remaining > wait) {
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                }
+                previous = now;
+                func.apply(context, args);
+                if (!timeout) context = args = null;
+            } else if (!timeout && options.trailing !== false) {
+                timeout = setTimeout(later, remaining);
+            }
+        };
+        
+        throttled.cancel = function() {
+            clearTimeout(timeout);
+            previous = 0;
+            timeout = null;
+        }
+        return throttled;
+    }
+
+
+    var node = document.querySelector('#layout')
+    var count = 0
+    function getUserAction(e, b) {
+        console.log(this, e, b)
+        node.innerHTML = count++
+    }
+    let fn = throttle(getUserAction, 1000)
+    node.onmousemove = function(e) {
+        fn(e, 1)
+    }
+    // node.onmousemove = fn
+</script>
+</html>

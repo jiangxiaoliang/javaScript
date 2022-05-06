@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    let arr = [1, [2, [3]]]
+    // 通过flat
+    // console.log(arr.flat(2))
+
+    // ES5递归实现
+    // function flatten(arr) {
+    //     var results = []
+    //     for (let i = 0, len = arr.length; i < len; i++) {
+    //         if (Array.isArray(arr[i])) {
+    //             results = results.concat(flatten(arr[i]))
+    //         } else {
+    //             results.push(arr[i])
+    //         }
+    //     }
+    //     return results
+    // }
+    // console.log(flatten(arr))
+
+    // ES6实现
+    // function flatten1(arr) {
+    //     while (arr.some(item => Array.isArray(item))) {
+    //         arr = [].concat(...arr)
+    //     }
+    //     return arr
+    // }
+    // console.log(flatten1(arr))
+</script>
+</html>

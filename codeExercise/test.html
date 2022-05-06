@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // 原型链继承
+    // function Animail() {
+    //     this.colors = ['red', 'yellow']
+    // }
+    // Animail.prototype.getColors = function() {
+    //     return this.colors
+    // }
+    // function Dog() {}
+    // Dog.prototype = new Animail()
+    // let dog1 = new Dog()
+    // dog1.colors.push('blue')
+    // let dog2 = new Dog()
+    // console.log(dog2.getColors())
+
+    // 借用原型链继承
+    // function Animail(name) {
+    //     this.name = name
+    //     this.getName = function() {
+    //         return this.name
+    //     }
+    // }
+    // function Dog(name) {
+    //     Animail.call(this, name)
+    // }
+    // Dog.prototype = new Animail()
+    // let dog1 = new Dog('dog1')
+    // let dog2 = new Dog('dog2')
+    // console.log(dog1.name)
+    // console.log(dog2.name)
+
+    // 组合继承
+    // function Animal(name) {
+    //     this.name = name
+    // }
+    // Animal.prototype.getName = function() {
+    //     return this.name
+    // }
+    // function Dog(name, age) {
+    //     Animal.call(this, name)
+    //     this.age = age
+    // }
+    // Dog.prototype = new Animal()
+    // Dog.prototype.constructor = Dog
+    // let dog1 = new Dog('dog1', 1)
+    // let dog2 = new Dog('dog2', 2)
+    // console.log(dog1.name, dog1.age)
+    // console.log(dog2.name, dog2.age)
+
+    // 寄生组合继承
+    function Animal(name) {
+        this.name = name
+    }
+    Animation.prototype.getName = function() {
+        return this.name
+    }
+    function Dog(name, age) {
+        Animal.call(this, name)
+        this.age = age
+    }
+    function F() {}
+    F.prototype = Animal.prototype
+    let f = new F()
+    f.constructor = Dog
+    Dog.prototype = f
+    let dog1 = new Dog('dog1', 1)
+    let dog2 = new Dog('dog2', 2)
+    console.log(dog1.name, dog1.age)
+    console.log(dog2.name, dog2.age)
+</script>
+</html>

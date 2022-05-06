@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    /**
+     * new 运算符用来创建用户自定义的对象类型的实例或者具有构造函数的内置对象的实例。
+        实现要点：
+
+        new 会产生一个新对象；
+        新对象需要能够访问到构造函数的属性，所以需要重新指定它的原型；
+        构造函数可能会显示返回；
+    */
+    function createNew() {
+        let obj = new Object()
+        Constructor = [].shift.call(arguments) // 构造函数
+        // 判断参数是否是一个函数
+        if (typeof Constructor !== "function") {
+            console.error("type error");
+            return;
+        }
+        // Object.setPrototypeOf(obj, Constructor.prototype)
+        obj.__proto__ = Constructor.prototype
+        let result = Constructor.apply(obj, arguments)
+        return result instanceof Object ? result : obj
+    }
+
+    function person(name, age) {
+        this.name = name
+        this.age = age
+    }
+    let p1 = createNew(person, 'jxl', 12)
+    console.log(p1)
+</script>
+</html>

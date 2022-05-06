@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // JSONP 核心原理：script 标签不受同源策略约束，所以可以用来进行跨域请求，优点是兼容性好，但是只能用于 GET 请求；
+    const jsonp = ({ url, params, callbackName }) => {
+        const generalUrl = () => {
+            let dataSrc = ''
+            for (let key in params) {
+                if (params.hasOwnProperty(key)) {
+                    dataSrc += `${key}=${params[key]}&`
+                }
+            }
+            dataSrc += `callback=${callbackName}`
+            return `${url}?${dataSrc}`
+        }
+        return new Promise((resolve, reject) => {
+            const scriptEle = document.createElement('script')
+            scriptEle.src = generalUrl()
+            document.body.appendChild(scriptEle)
+            window[callbackName] = data => {
+                resolve(data)
+                document.removeChild(scriptEle)
+            }
+        })
+    }
+</script>
+</html>

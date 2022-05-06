@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    class EventEmitter {
+        constructor() {
+            this.cache = {}
+        }
+        on(name, fn) {
+            if (this.cache[name]) {
+                this.cache[name].push(fn)
+            } else {
+                this.cache[name] = [fn]
+            }
+        }
+        emit(name, once = false, ...args) {
+            if (this.cache[name]) {
+                // 创建副本，如果回调函数内继续注册相同事件，会造成死循环
+                let tasks = this.cache[name].slice()
+                for(let fn of tasks) {
+                    fn(...args)
+                }
+                if (once) {
+                    delete this.cache[name]
+                }
+            }
+        }
+        off(name, fn) {
+            let tasks = this.cache[name]
+            if (tasks) {
+                const index = tasks.findIndex(f => f === fn || f.callback === fn)
+                if (index >= 0) {
+                    tasks.splice(index, 1)
+                }
+            }
+        }
+    }
+
+    let eventBus = new EventEmitter()
+    let fn1 = function(name, age) {
+        console.log(`fn1 ${name} ${age}`)
+    }
+    let fn2 = function(name, age) {
+        console.log(`fn2 ${name} ${age}`)
+    }
+    eventBus.on('a', fn1)
+    eventBus.on('a', fn2)
+    eventBus.on('b', fn1)
+    eventBus.emit('a', false, 'jxl', 18)
+    eventBus.emit('a', false, 'jxl', 18)
+    eventBus.emit('b', true, 'zsy', 18)
+    eventBus.emit('b', true, 'zsy', 18)
+</script>
+</html>

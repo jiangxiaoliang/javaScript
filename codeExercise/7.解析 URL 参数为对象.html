@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    function parseParam(url) {
+        const paramStr = /.+\?(.+)$/.exec(url)[1] // 将 ? 后面的字符串取出来
+        const paramArr = paramStr.split('&') // 将字符串以 & 分割后存到数组中
+        let paramObj = {}
+        paramArr.forEach(param => {
+            if (/=/.test(param)) { // 处理有 value 的参数
+                let [key, val] = param.split('=') // 分割 key 和 value
+                val = decodeURIComponent(val) // 解码
+                val = /^\d+$/.test(val) ? parseFloat(val) : val
+                if (paramObj.hasOwnProperty(key)) {
+                    paramObj[key] = [].concat(paramObj[key], val)
+                } else {
+                    paramObj[key] = val
+                }
+            } else { // 处理没有 value 的参数
+                paramObj[param] = true
+            }
+        })
+        return paramObj
+    }
+
+    const http1 = 'https://www.baidu.com/s?wd=js+slice&rsv_spt=1&rsv_iqid=0x90c8f73d0020ea8f&issp=1&f=8&rsv_bp=1&rsv_idx=2&ie=utf-8&rqlang=&tn=baiduhome_pg&ch=&rsv_enter=1&rsv_dl=ib&rsv_btype=i&inputT=2902'
+    const http2 = 'https://www.baidu.com?a=1&b=2&a=3&c=abc&d'
+    console.log(parseParam(http1))
+    console.log(parseParam(http2))
+</script>
+</html>

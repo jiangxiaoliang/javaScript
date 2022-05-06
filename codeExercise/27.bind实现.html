@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        {
+            /*
+                1、判断调用对象是否为函数，即使是定义在函数的原型上的，但是可能出现使用 call 等方式调用的情况。
+                2、保存当前函数的引用，获取其余传入参数值。
+                3、创建一个函数返回
+                4、函数内部使用 apply 来绑定函数调用，需要判断函数作为构造函数的情况，这个时候需要传入当前函数的 this 给 apply 调用，其余情况都传入指定的上下文对像
+
+            */
+
+            Function.prototype.myBind = function(context) {
+                if (typeof this !== 'function') {
+                    throw new TypeError('Error')
+                }
+                let args = [...arguments].slice(1)
+                let fn = this
+                return function Fn() {
+                    return fn.apply(
+                        this instanceof Fn ? this : context,
+                        args.concat([...arguments])
+                    )
+                }
+            }
+
+            obj = {
+                a: () => {
+                    console.log(this)
+                },
+                name: 'jxl'
+            }
+            function fn(a, b) {
+                console.log(this.name, a, b)
+            }
+            fn()
+            fn.bind(obj, [1, 2])()
+            fn.myBind(obj, [1, 2])()
+        }
+    </script>
+</body>
+</html>

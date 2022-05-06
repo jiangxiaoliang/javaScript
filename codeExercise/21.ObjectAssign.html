@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // let o1 = {'a':1, 'b':1}
+    // let o2 = {'b':2}
+    // let o3 = {'c':3}
+    // let obj = Object.assign(o1, o2, o3)
+    // console.log(obj) // {a: 1, b: 2, c: 3}
+
+    Object.assign2 = function (target, ...source) {
+        if (target === null) {
+            throw new TypeError('Object prototype may only be an Object or null.')
+        }
+        let ret = Object(target)
+        console.log(source)
+        source.forEach(obj => {
+            if (obj != null) {
+                for (let key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        ret[key] = obj[key]
+                    }
+                }
+            }
+        })
+        return ret
+    }
+
+    let o1 = {'a':1, 'b':1}
+    let o2 = {'b':2}
+    let o3 = {'c':3}
+    let obj = Object.assign2(o1, o2, o3)
+    console.log(obj) // {a: 1, b: 2, c: 3}
+</script>
+</html>

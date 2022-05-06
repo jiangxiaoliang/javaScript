@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #layout {
+            width: 500px;
+            height: 500px;
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <div id="layout"></div>
+</body>
+<script>
+    // function debounce(func, wait = 500) {
+    //     var timeout
+    //     return function(...args) {
+    //         var _this = this
+    //         clearTimeout(timeout)
+    //         timeout = setTimeout(function () {
+    //             func.call(_this, ...args)
+    //         }, wait)
+    //     }
+    // }
+
+
+    /**
+     * 最终版：除了支持 this 和 event 外，还支持以下功能：
+     * 支持立即执行；函数可能有返回值；支持取消功能； 
+    */
+   function debounce(func, wait = 500, immediate = false) {
+       var timeout, result
+       var debounced =  function(...args) {
+           var _this = this
+           if (timeout) {
+               clearTimeout(timeout)
+           }
+           if (immediate) {
+               var callNow = !timeout
+               timeout = setTimeout(function() {
+                   timeout = null
+               }, wait)
+               if (callNow) result = func.call(_this, ...args)
+           } else {
+               timeout = setTimeout(function() {
+                   func.call(_this, ...args)
+               },  wait)
+           }
+           return result
+       }
+       debounced.cancel = function() {
+           clearTimeout(timeout)
+           timeout = null
+       }
+       return debounced
+   }
+
+
+    var node = document.querySelector('#layout')
+    var count = 0
+    function getUserAction(e, b) {
+        console.log(this, e, b)
+        node.innerHTML = count++
+    }
+    let fn = debounce(getUserAction, 1000, true)
+    // node.onmousemove = function(e) {
+    //     fn(e, 1)
+    // }
+    node.onmousemove = fn
+    fn.cancel()
+</script>
+</html>
